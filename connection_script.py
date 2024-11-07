@@ -6,20 +6,19 @@ import os
 # Cargar las variables del archivo .env
 load_dotenv()
 
-# Obtener las variables
+# Obtener las variables del archivo .env
 password = os.getenv('PASSWORD')
 user_db = os.getenv('USER_DB')
 db_name_bodega = os.getenv('DB_NAME_BODEGA')
 db_name_etl = os.getenv('DB_NAME_ETL')
 db_port = os.getenv('DB_PORT')  # Obtener el puerto de la base de datos
 
-
 # Configuración de conexión a la base de datos `bodega_datos`
-DATABASE_URI_BODEGA = 'postgresql+psycopg2://{}:{}@localhost:5433/{}'.format(user_db, password, db_name_bodega)
+DATABASE_URI_BODEGA = f'postgresql+psycopg2://{user_db}:{password}@localhost:{db_port}/{db_name_bodega}'
 engine_bodega = create_engine(DATABASE_URI_BODEGA)
 
 # Configuración de conexión a la base de datos `etl_rapidos_furiosos`
-DATABASE_URI_ETL = 'postgresql+psycopg2://{}:{}@localhost:5433/{}'.format(user_db, password, db_name_etl)
+DATABASE_URI_ETL = f'postgresql+psycopg2://{user_db}:{password}@localhost:{db_port}/{db_name_etl}'
 engine_etl = create_engine(DATABASE_URI_ETL)
 
 # Función para obtener el engine de la base de datos solicitada
@@ -37,12 +36,12 @@ def connect_databases():
     """Prueba la conexión a ambas bases de datos."""
     try:
         with engine_bodega.connect() as connection:
-            print("Conexión exitosa a la base de datos 'bodega_datos'")
+            print(f"Conexión exitosa a la base de datos 'bodega_datos' en el puerto {db_port}")
     except Exception as e:
         print(f"Error al conectar a 'bodega_datos': {e}")
 
     try:
         with engine_etl.connect() as connection:
-            print("Conexión exitosa a la base de datos 'etl_rapidos_furiosos'")
+            print(f"Conexión exitosa a la base de datos 'etl_rapidos_furiosos' en el puerto {db_port}")
     except Exception as e:
         print(f"Error al conectar a 'etl_rapidos_furiosos': {e}")
