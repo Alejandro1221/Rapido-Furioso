@@ -19,7 +19,6 @@ CREATE TABLE fechas (
 
 CREATE TABLE departamentos (
     id_departamento SERIAL PRIMARY KEY,
-    codigo_departamento VARCHAR(100) NOT NULL UNIQUE,
     nombre_departamento VARCHAR(100) NOT NULL
 );
 
@@ -157,3 +156,22 @@ CREATE TABLE eficiencia_hora (
     novedades_reportadas TEXT,
     tiempo_promedio INT NOT NULL
 );
+
+
+
+---- eliminar todos los registros
+
+DO $ $ DECLARE r RECORD;
+
+BEGIN FOR r IN (
+    SELECT
+        tablename
+    FROM
+        pg_tables
+    WHERE
+        schemaname = 'public'
+) LOOP EXECUTE 'TRUNCATE TABLE ' || quote_ident(r.tablename) || ' CASCADE;';
+
+END LOOP;
+
+END $ $;
