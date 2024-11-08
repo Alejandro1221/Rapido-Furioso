@@ -19,7 +19,6 @@ CREATE TABLE fechas (
 
 CREATE TABLE departamentos (
     id_departamento SERIAL PRIMARY KEY,
-    codigo_departamento VARCHAR(100) NOT NULL UNIQUE,
     nombre_departamento VARCHAR(100) NOT NULL
 );
 
