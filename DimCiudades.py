@@ -2,7 +2,6 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 import pandas as pd
 from connection_script import get_engine
-
 def extract(engine_bodega):
     """Extraer datos de la base de datos 'bodega_datos'."""
     with engine_bodega.connect() as conn_bodega:
