@@ -1,15 +1,15 @@
-pip install pandas sqlalchemy psycopg2
 
 
 import pandas as pd
 from sqlalchemy import create_engine
+import os
 
 # Configura la conexión a la base de datos PostgreSQL
-db_user = 'postgresql'
-db_password = 'tu_contraseña'
+db_user = 'postgres'
+db_password = os.getenv('PASSWORD')
 db_host = 'localhost'  # Cambia si está en otro host
 db_port = '5432'       # Puerto por defecto de PostgreSQL
-db_name = 'nombre_base_datos'
+db_name = os.getenv('DB_NAME_ETL')
 
 # Crear el motor de conexión
 engine = create_engine(f'postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
