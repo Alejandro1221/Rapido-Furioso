@@ -5,6 +5,8 @@ psql -h localhost -p 5433 -U postgres -d bodega_datos -f "/Users/jhonfreddypopom
 -- crear tablas para etl de analisis
 CREATE TABLE fechas (
     id_fecha SERIAL PRIMARY KEY,
+    anio INT, 
+    date_actual DATE,
     mes INT,
     hora INT ,
     dia_mes VARCHAR(255) NOT NULL,
