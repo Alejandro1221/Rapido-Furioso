@@ -34,15 +34,32 @@ def etl_mayor():
        
         
         # Obtener fecha_entrega y hora_entrega para estado = 6 y tiempo de espera para estado = 2
-        df['fecha_entrega'], df['hora_entrega'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 6)))
-        df['fecha_asignacion'], df['hora_asignacion'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 2)))
+        df['fecha_solicitud'], df['hora_solicitud'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 1)))
+        df['id_fecha_solicitud'] = df['fecha_solicitud'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
+
+        df['fecha_mensajero_asignado'], df['hora_mensajero_asignado'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 2)))
+        df['id_fecha_asignacion'] = df['fecha_mensajero_asignado'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
+
+        df["fecha_recogida"], df["hora_recogida"] = zip(*df["id"].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 4)))
+        df["id_fecha_recogida"] = df["fecha_recogida"].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
         
-        df['fecha_entrega'] = df['fecha_entrega'].combine_first(df['fecha_solicitud'])
-        df['hora_entrega'] = df['hora_entrega'].combine_first(df['hora_solicitud'])
+        df['fecha_entrega'], df['hora_entrega'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 5)))
+        df['id_fecha_entrega'] = df['fecha_deseada'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
+
+        df['fecha_cerrado'], df['hora_cerrado'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 6)))
+        df['id_fecha_cerrado'] = df['fecha_cerrado'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
+   
+        # si fecha de mensajero asignado es nula, se asigna la fecha de solicitud
+        df['fecha_mensajero_asignado'] = df['fecha_mensajero_asignado'].combine_first(df['fecha_solicitud'])
+        #si fecha de recolección es nula, se asigna la fecha de mensajero asignado
+        df['fecha_recogida'] = df['fecha_recogida'].combine_first(df['fecha_mensajero_asignado'])
+        #si fecha de entrega es nula, se asigna la fecha de recolección
+        df['fecha_entrega'] = df['fecha_entrega'].combine_first(df['fecha_recogida'])
+        #si fecha de cierre es nula, se asigna la fecha de entrega
+        df['fecha_cerrado'] = df['fecha_cerrado'].combine_first(df['fecha_entrega'])
+
 
         # Asignar id_fecha para fecha_solicitud y fecha_deseada desde la tabla fechas
-        df['id_fecha_solicitud'] = df['fecha_solicitud'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
-        df['id_fecha_entrega'] = df['fecha_deseada'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
 
         # Validar y mapear columnas necesarias para la base de datos ETL
         df['cliente_id'] = df['cliente_id'].apply(lambda x: validar_existencia_id(conn_etl, 'cliente', 'id_cliente', x))

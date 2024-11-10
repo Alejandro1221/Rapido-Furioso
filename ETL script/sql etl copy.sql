@@ -112,13 +112,13 @@ CREATE TABLE servicios (
 
 
     id_fecha_solicitud INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
-    id_fecha_mensajero INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
+    id_fecha_mensajero_asignado INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
     id_fecha_recogida INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
     id_fecha_entrega INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
     id_fecha_cerrado INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
 
     hora_solicitud TIME,
-    hora_mensajero TIME, --mensajero asignado
+    hora_mensajero_asignado TIME, --mensajero asignado
     hora_recogida TIME,
     hora_entrega TIME,
     hora_cerrado TIME,
