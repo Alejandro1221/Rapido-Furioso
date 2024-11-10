@@ -133,7 +133,6 @@ CREATE TABLE servicios (
     tiempo_recogida_entrega DECIMAL,
     tiempo_entrega_cerrado DECIMAL,
 
-    
     id_origen_servicio INT REFERENCES origen_servicio(id_origen) ON DELETE CASCADE,
     id_destino_servicio INT REFERENCES destino_servicio(id_destino) ON DELETE CASCADE,
     descripcion_pago TEXT,
@@ -143,6 +142,9 @@ CREATE TABLE servicios (
     id_origen_ciudad INT REFERENCES ciudades(id_ciudad) ON DELETE CASCADE,
     id_destino_ciudad INT REFERENCES ciudades(id_ciudad) ON DELETE CASCADE,
     descripcion_cancelado VARCHAR(2000)
+
+    id_tipo_vehiculo INT REFERENCES tipo_vehiculo(id_tipo_vehiculo) ON DELETE CASCADE,
+    id_tipo_pago INT REFERENCES  tipo_pago(id_tipo_pago) ON DELETE CASCADE,
 );
 
 CREATE TABLE novedades (
