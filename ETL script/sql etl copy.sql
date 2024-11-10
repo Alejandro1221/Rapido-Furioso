@@ -109,15 +109,31 @@ CREATE TABLE servicios (
     id_servicio SERIAL PRIMARY KEY,
     id_cliente INT REFERENCES cliente(id_cliente) ON DELETE CASCADE,
     id_mensajero INT REFERENCES mensajero(id_mensajero) ON DELETE CASCADE,
+
+
     id_fecha_solicitud INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
+    id_fecha_mensajero INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
+    id_fecha_recogida INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
     id_fecha_entrega INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
-    fecha_solicitud DATE,
+    id_fecha_cerrado INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
+
     hora_solicitud TIME,
-    fecha_entrega DATE,
+    hora_mensajero TIME, --mensajero asignado
+    hora_recogida TIME,
     hora_entrega TIME,
-    id_estado INT REFERENCES estados(id_estado) ON DELETE CASCADE,
+    hora_cerrado TIME,
+
+
+    fecha_solicitud DATE,
+    fecha_entrega DATE,
+    -- id_estado INT REFERENCES estados(id_estado) ON DELETE CASCADE,
     duracion_total INT,
-    tiempo_espera VARCHAR(50),
+    tiempo_espera DECIMAL,
+    tiempo_mensajero_recogida DECIMAL,
+    tiempo_recogida_entrega DECIMAL,
+    tiempo_entrega_cerrado DECIMAL,
+
+    
     id_origen_servicio INT REFERENCES origen_servicio(id_origen) ON DELETE CASCADE,
     id_destino_servicio INT REFERENCES destino_servicio(id_destino) ON DELETE CASCADE,
     descripcion_pago TEXT,
