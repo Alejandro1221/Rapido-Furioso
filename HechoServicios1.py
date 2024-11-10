@@ -24,7 +24,7 @@ def etl_mayor():
                ciudad_origen_id, hora_visto_por_mensajero, visto_por_mensajero,
                descripcion_multiples_origenes, mensajero2_id, mensajero3_id,
                multiples_origenes, asignar_mensajero, es_prueba, descripcion_cancelado
-        FROM mensajeria_servicio  100;
+        FROM mensajeria_servicio ;
         """
         df = pd.read_sql(query, conn_bodega)
         
@@ -56,12 +56,24 @@ def etl_mayor():
    
         # si fecha de mensajero asignado es nula, se asigna la fecha de solicitud
         df['fecha_mensajero_asignado'] = df['fecha_mensajero_asignado'].combine_first(df['fecha_solicitud'])
+        df['hora_mensajero_asignado'] = df['hora_mensajero_asignado'].combine_first(df['hora_solicitud'])
+        df['id_fecha_mensajero_asignado'] = df['id_fecha_mensajero_asignado'].combine_first(df['id_fecha_solicitud'])
+
         #si fecha de recolección es nula, se asigna la fecha de mensajero asignado
         df['fecha_recogida'] = df['fecha_recogida'].combine_first(df['fecha_mensajero_asignado'])
+        df['hora_recogida'] = df['hora_recogida'].combine_first(df['hora_mensajero_asignado'])
+        df['id_fecha_recogida'] = df['id_fecha_recogida'].combine_first(df['id_fecha_mensajero_asignado'])
+
+
         #si fecha de entrega es nula, se asigna la fecha de recolección
         df['fecha_entrega'] = df['fecha_entrega'].combine_first(df['fecha_recogida'])
+        df['hora_entrega'] = df['hora_entrega'].combine_first(df['hora_recogida'])
+        df['id_fecha_entrega'] = df['id_fecha_entrega'].combine_first(df['id_fecha_recogida'])
+
         #si fecha de cierre es nula, se asigna la fecha de entrega
         df['fecha_cerrado'] = df['fecha_cerrado'].combine_first(df['fecha_entrega'])
+        df['hora_cerrado'] = df['hora_cerrado'].combine_first(df['hora_entrega'])
+        df['id_fecha_cerrado'] = df['id_fecha_cerrado'].combine_first(df['id_fecha_entrega'])
 
         # Asignar id_fecha para fecha_solicitud y fecha_deseada desde la tabla fechas
 
@@ -77,9 +89,12 @@ def etl_mayor():
         df['descripcion_pago'] = df['descripcion_pago'].fillna("Sin información de pago")
         
         # Calcular tiempos
-        df['duracion_total'] = df.apply(lambda row: calcular_duracion(row['fecha_solicitud'], row['hora_solicitud'], row['fecha_entrega'], row['hora_entrega']), axis=1)
         df['tiempo_espera'] = df.apply(lambda row: calcular_duracion(row['fecha_solicitud'], row['hora_solicitud'], row['fecha_mensajero_asignado'], row['hora_mensajero_asignado']), axis=1)
-     
+        df['tiempo_mensajero_recogida'] = df.apply(lambda row: calcular_duracion(row['fecha_mensajero_asignado'], row['hora_mensajero_asignado'], row['fecha_recogida'], row['hora_recogida']), axis=1)
+        df['tiempo_recogida_entrega'] = df.apply(lambda row: calcular_duracion(row['fecha_recogida'], row['hora_recogida'], row['fecha_entrega'], row['hora_entrega']), axis=1)
+        df['tiempo_entrega_cerrado'] = df.apply(lambda row: calcular_duracion(row['fecha_entrega'], row['hora_entrega'], row['fecha_cerrado'], row['hora_cerrado']), axis=1)
+
+        df['duracion_total'] = df.apply(lambda row: calcular_duracion(row['fecha_solicitud'], row['hora_solicitud'], row['fecha_entrega'], row['hora_entrega']), axis=1)
         # Renombrar columnas para cumplir con el esquema de la base de datos ETL
         df.rename(columns={
             'id': 'id_servicio',
@@ -114,7 +129,10 @@ def etl_mayor():
             'fecha_entrega',
             'id_estado',
             'duracion_total', 
-            'tiempo_espera', 
+            'tiempo_espera',
+            'tiempo_mensajero_recogida',
+            'tiempo_recogida_entrega',
+            'tiempo_entrega_cerrado', 
             'id_origen_servicio', 
             'id_destino_servicio', 
             'descripcion_pago', 
