@@ -140,7 +140,9 @@ def etl_mayor():
             'prioridad', 
             'id_origen_ciudad', 
             'id_destino_ciudad', 
-            'descripcion_cancelado']
+            'descripcion_cancelado',
+            'id_tipo_vehiculo',
+            'id_tipo_pago']
         
         df = df[columnas_finales]
 
