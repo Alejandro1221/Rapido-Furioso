@@ -37,6 +37,9 @@ def etl_mayor():
         df['fecha_entrega'], df['hora_entrega'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 6)))
         df['fecha_asignacion'], df['hora_asignacion'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 2)))
         
+        df['fecha_entrega'] = df['fecha_entrega'].combine_first(df['fecha_solicitud'])
+        df['hora_entrega'] = df['hora_entrega'].combine_first(df['hora_solicitud'])
+
         # Asignar id_fecha para fecha_solicitud y fecha_deseada desde la tabla fechas
         df['id_fecha_solicitud'] = df['fecha_solicitud'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
         df['id_fecha_entrega'] = df['fecha_deseada'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
