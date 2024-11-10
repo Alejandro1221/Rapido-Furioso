@@ -15,7 +15,11 @@ def etl_mayor():
         SELECT id, descripcion, nombre_solicitante, fecha_solicitud, hora_solicitud,
                fecha_deseada, hora_deseada, nombre_recibe, telefono_recibe,
                descripcion_pago, ida_y_regreso, activo, novedades, cliente_id,
-               destino_id, mensajero_id, origen_id, tipo_pago_id, tipo_servicio_id,
+               destino_id, COALESCE(
+                NULLIF(ms.mensajero3_id, NULL),  -- Si mensajero3_id no es nulo
+                NULLIF(ms.mensajero2_id, NULL),  -- Si mensajero2_id no es nulo
+                NULLIF(ms.mensajero_id, NULL)     -- Si mensajero_id no es nulo
+            ) AS mensajero_id, origen_id, tipo_pago_id, tipo_servicio_id,
                tipo_vehiculo_id, usuario_id, prioridad, ciudad_destino_id,
                ciudad_origen_id, hora_visto_por_mensajero, visto_por_mensajero,
                descripcion_multiples_origenes, mensajero2_id, mensajero3_id,
