@@ -148,7 +148,6 @@ CREATE TABLE servicios (
 
 CREATE TABLE novedades (
     id_novedad SERIAL PRIMARY KEY,
-    id_estado INT REFERENCES estados(id_estado) ON DELETE CASCADE,
     id_servicio INT REFERENCES servicios(id_servicio) ON DELETE CASCADE,
     descripcion TEXT NOT NULL,
     id_tipo_novedad INT REFERENCES tipo_servicio(id_tipo_servicio) ON DELETE CASCADE,

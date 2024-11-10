@@ -24,7 +24,8 @@ def etl_mayor():
                ciudad_origen_id, hora_visto_por_mensajero, visto_por_mensajero,
                descripcion_multiples_origenes, mensajero2_id, mensajero3_id,
                multiples_origenes, asignar_mensajero, es_prueba, descripcion_cancelado
-        FROM mensajeria_servicio ;
+        FROM mensajeria_servicio 
+        ORDER BY id ASC;
         """
         df = pd.read_sql(query, conn_bodega)
         
