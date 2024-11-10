@@ -126,7 +126,7 @@ CREATE TABLE servicios (
 
     fecha_solicitud DATE,
     fecha_entrega DATE,
-    -- id_estado INT REFERENCES estados(id_estado) ON DELETE CASCADE,
+    id_estado INT REFERENCES estados(id_estado) ON DELETE CASCADE,
     duracion_total INT,
     tiempo_espera DECIMAL,
     tiempo_mensajero_recogida DECIMAL,

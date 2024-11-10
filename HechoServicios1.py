@@ -58,7 +58,6 @@ def etl_mayor():
         #si fecha de cierre es nula, se asigna la fecha de entrega
         df['fecha_cerrado'] = df['fecha_cerrado'].combine_first(df['fecha_entrega'])
 
-
         # Asignar id_fecha para fecha_solicitud y fecha_deseada desde la tabla fechas
 
         # Validar y mapear columnas necesarias para la base de datos ETL
@@ -72,9 +71,9 @@ def etl_mayor():
         # Rellenar descripcion_pago con "Sin información de pago" si es nulo
         df['descripcion_pago'] = df['descripcion_pago'].fillna("Sin información de pago")
         
-        # Calcular duración total y tiempo de espera
+        # Calcular tiempos
         df['duracion_total'] = df.apply(lambda row: calcular_duracion(row['fecha_solicitud'], row['hora_solicitud'], row['fecha_entrega'], row['hora_entrega']), axis=1)
-        df['tiempo_espera'] = df.apply(lambda row: calcular_duracion(row['fecha_solicitud'], row['hora_solicitud'], row['fecha_asignacion'], row['hora_asignacion']), axis=1)
+        df['tiempo_espera'] = df.apply(lambda row: calcular_duracion(row['fecha_solicitud'], row['hora_solicitud'], row['fecha_mensajero_asignado'], row['hora_mensajero_asignado']), axis=1)
      
         # Renombrar columnas para cumplir con el esquema de la base de datos ETL
         df.rename(columns={
