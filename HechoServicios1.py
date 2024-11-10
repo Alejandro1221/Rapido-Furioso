@@ -16,15 +16,15 @@ def etl_mayor():
                fecha_deseada, hora_deseada, nombre_recibe, telefono_recibe,
                descripcion_pago, ida_y_regreso, activo, novedades, cliente_id,
                destino_id, COALESCE(
-                NULLIF(ms.mensajero3_id, NULL),  -- Si mensajero3_id no es nulo
-                NULLIF(ms.mensajero2_id, NULL),  -- Si mensajero2_id no es nulo
-                NULLIF(ms.mensajero_id, NULL)     -- Si mensajero_id no es nulo
+                NULLIF(mensajero3_id, NULL),  -- Si mensajero3_id no es nulo
+                NULLIF(mensajero2_id, NULL),  -- Si mensajero2_id no es nulo
+                NULLIF(mensajero_id, NULL)     -- Si mensajero_id no es nulo
             ) AS mensajero_id, origen_id, tipo_pago_id, tipo_servicio_id,
                tipo_vehiculo_id, usuario_id, prioridad, ciudad_destino_id,
                ciudad_origen_id, hora_visto_por_mensajero, visto_por_mensajero,
                descripcion_multiples_origenes, mensajero2_id, mensajero3_id,
                multiples_origenes, asignar_mensajero, es_prueba, descripcion_cancelado
-        FROM mensajeria_servicio;
+        FROM mensajeria_servicio  100;
         """
         df = pd.read_sql(query, conn_bodega)
         
@@ -42,7 +42,8 @@ def etl_mayor():
         df['id_fecha_solicitud'] = df['fecha_solicitud'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
 
         df['fecha_mensajero_asignado'], df['hora_mensajero_asignado'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 2)))
-        df['id_fecha_asignacion'] = df['fecha_mensajero_asignado'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
+        df['id_fecha_mensajero_asignado'] = df['fecha_mensajero_asignado'].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
+        # print(f"Servicio ID: {df['id_fecha_mensajero_asignado']}")
 
         df["fecha_recogida"], df["hora_recogida"] = zip(*df["id"].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 4)))
         df["id_fecha_recogida"] = df["fecha_recogida"].apply(lambda x: obtener_id_fecha_fecha(conn_etl, x))
@@ -95,11 +96,33 @@ def etl_mayor():
         }, inplace=True)
         
         # Filtrar las columnas finales para cargar a la tabla mayor
-        columnas_finales = ['id_servicio', 'id_cliente', 'id_mensajero', 'id_fecha_solicitud', 'id_fecha_entrega', 
-                            'fecha_solicitud','hora_solicitud' ,'fecha_entrega' ,'hora_entrega' ,'id_estado',
-                        'duracion_total', 'tiempo_espera', 'id_origen_servicio', 'id_destino_servicio', 
-                        'descripcion_pago', 'id_tiposervicio', 'prioridad', 'id_origen_ciudad', 'id_destino_ciudad', 
-                        'descripcion_cancelado']
+        columnas_finales = [
+            'id_servicio', 
+            'id_cliente', 
+            'id_mensajero', 
+            'id_fecha_solicitud', 
+            'id_fecha_mensajero_asignado',
+            'id_fecha_recogida',
+            'id_fecha_entrega',
+            'id_fecha_cerrado', 
+            'hora_solicitud',
+            'hora_mensajero_asignado', 
+            'hora_recogida',
+            'hora_entrega',
+            'hora_cerrado',
+            'fecha_solicitud',
+            'fecha_entrega',
+            'id_estado',
+            'duracion_total', 
+            'tiempo_espera', 
+            'id_origen_servicio', 
+            'id_destino_servicio', 
+            'descripcion_pago', 
+            'id_tiposervicio', 
+            'prioridad', 
+            'id_origen_ciudad', 
+            'id_destino_ciudad', 
+            'descripcion_cancelado']
         
         df = df[columnas_finales]
 
