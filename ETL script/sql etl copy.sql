@@ -123,7 +123,6 @@ CREATE TABLE servicios (
     hora_entrega TIME,
     hora_cerrado TIME,
 
-
     fecha_solicitud DATE,
     fecha_entrega DATE,
     id_estado INT REFERENCES estados(id_estado) ON DELETE CASCADE,
