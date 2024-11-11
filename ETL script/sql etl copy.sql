@@ -140,10 +140,10 @@ CREATE TABLE servicios (
     -- Puede ser VARCHAR o INT dependiendo de cómo quieras manejar la prioridad
     id_origen_ciudad INT REFERENCES ciudades(id_ciudad) ON DELETE CASCADE,
     id_destino_ciudad INT REFERENCES ciudades(id_ciudad) ON DELETE CASCADE,
-    descripcion_cancelado VARCHAR(2000)
+    descripcion_cancelado VARCHAR(2000),
 
     id_tipo_vehiculo INT REFERENCES tipo_vehiculo(id_tipo_vehiculo) ON DELETE CASCADE,
-    id_tipo_pago INT REFERENCES  tipo_pago(id_tipo_pago) ON DELETE CASCADE,
+    id_tipo_pago INT REFERENCES  tipo_pago(id_tipo_pago) ON DELETE CASCADE
 );
 
 CREATE TABLE novedades (

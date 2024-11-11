@@ -25,7 +25,9 @@ def etl_mayor():
                descripcion_multiples_origenes, mensajero2_id, mensajero3_id,
                multiples_origenes, asignar_mensajero, es_prueba, descripcion_cancelado
         FROM mensajeria_servicio 
-        ORDER BY id ASC;
+        ORDER BY id ASC
+        
+        limit 300;
         """
         df = pd.read_sql(query, conn_bodega)
         
