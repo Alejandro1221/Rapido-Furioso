@@ -108,7 +108,8 @@ def etl_mayor():
             'prioridad': 'prioridad',
             'ciudad_destino_id': 'id_destino_ciudad',
             'ciudad_origen_id': 'id_origen_ciudad',
-            'descripcion_cancelado': 'descripcion_cancelado'
+            'descripcion_cancelado': 'descripcion_cancelado',
+            'tipo_vehiculo_id':'id_tipo_vehiculo'
         }, inplace=True)
         
         # Filtrar las columnas finales para cargar a la tabla mayor
