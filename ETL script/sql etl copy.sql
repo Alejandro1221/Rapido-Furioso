@@ -170,23 +170,47 @@ CREATE TABLE novedades (
 );
 
 
-CREATE TABLE eficiencia_dia (
-    id_estado SERIAL PRIMARY KEY,
-    id_mensajero INT REFERENCES mensajero(id_mensajero) ON DELETE CASCADE,
-    id_fecha INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
-    cantidad_servicios INT NOT NULL,
-    novedades_reportadas TEXT,
-    tiempo_promedio INT NOT NULL
-);
 
-CREATE TABLE eficiencia_hora (
-    id_estado SERIAL PRIMARY KEY,
-    id_mensajero INT REFERENCES mensajero(id_mensajero) ON DELETE CASCADE,
-    id_fecha INT REFERENCES fechas(id_fecha) ON DELETE CASCADE,
-    cantidad_servicios INT NOT NULL,
-    novedades_reportadas TEXT,
-    tiempo_promedio INT NOT NULL
-);
+
+
+CREATE TABLE IF NOT EXISTS public.eficiencia_hora
+(
+    id_eficiencia_hora SERIAL PRIMARY KEY,
+    id_estado integer,
+    id_mensajero integer,
+    id_fecha integer,
+    cantidad_servicios integer NOT NULL,
+    novedades_reportadas text COLLATE pg_catalog."default",
+    tiempo_promedio integer NOT NULL,
+    CONSTRAINT eficiencia_hora_id_fecha_fkey FOREIGN KEY (id_fecha)
+        REFERENCES public.fechas (id_fecha) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT eficiencia_hora_id_mensajero_fkey FOREIGN KEY (id_mensajero)
+        REFERENCES public.mensajero (id_mensajero) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+
+CREATE TABLE IF NOT EXISTS public.eficiencia_dia
+(
+    id_eficiencia_dia SERIAL PRIMARY KEY,
+    id_estado integer,
+	id_mensajero integer,
+    id_fecha integer,
+    cantidad_servicios integer NOT NULL,
+    novedades_reportadas text COLLATE pg_catalog."default",
+    tiempo_promedio integer NOT NULL,
+    CONSTRAINT eficiencia_dia_id_fecha_fkey FOREIGN KEY (id_fecha)
+        REFERENCES public.fechas (id_fecha) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT eficiencia_dia_id_mensajero_fkey FOREIGN KEY (id_mensajero)
+        REFERENCES public.mensajero (id_mensajero) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
 
 
 
