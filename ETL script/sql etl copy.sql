@@ -75,7 +75,8 @@ CREATE TABLE tipo_pago (
 CREATE TABLE mensajero (
     id_mensajero SERIAL PRIMARY KEY,
     telefono_mensajero VARCHAR(20),
-    activo BOOLEAN NOT NULL DEFAULT TRUE
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+    nombre_mensajero VARCHAR(255)
 );
 
 CREATE TABLE tipo_servicio (
