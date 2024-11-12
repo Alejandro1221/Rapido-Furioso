@@ -1,7 +1,3 @@
---restaurar la base de datos del profesor 
-
-psql -h localhost -p 5433 -U postgres -d bodega_datos -f "/Users/jhonfreddypopomoreno/Downloads/bd_proyecto_2024 2/copia-BD.sql"
-
 -- crear tablas para etl de analisis
 CREATE TABLE fechas (
     id_fecha SERIAL PRIMARY KEY,
@@ -188,18 +184,4 @@ CREATE TABLE eficiencia_hora (
     novedades_reportadas TEXT,
     tiempo_promedio INT NOT NULL
 );
-
-
----- eliminar todos los registros
-
-DO
-$$
-DECLARE
-    r RECORD;
-BEGIN
-    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
-        EXECUTE 'TRUNCATE TABLE ' || quote_ident(r.tablename) || ' CASCADE;';
-    END LOOP;
-END
-$$;
 

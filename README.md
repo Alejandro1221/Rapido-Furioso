@@ -32,6 +32,6 @@
 4. Ejecutar cada archivo. Se recomienda seguir el orden referido 
 
 ```
-    1. Hechos.ipynb
+    1. etl.ipynb
     2. Respuesta_preguntas.ipynb
 ```
