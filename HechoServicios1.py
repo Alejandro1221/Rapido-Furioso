@@ -36,7 +36,6 @@ def etl_mayor():
         
         # Obtener el mayor estado de cada servicio y asignarlo a la columna id_estado
         df['id_estado'] = df['id'].apply(lambda servicio_id: obtener_mayor_estado(engine_bodega, servicio_id))
-       
         
         # Obtener fecha_entrega y hora_entrega para estado = 6 y tiempo de espera para estado = 2
         df['fecha_solicitud'], df['hora_solicitud'] = zip(*df['id'].apply(lambda x: obtener_fecha_hora_estado(engine_bodega, x, 1)))
@@ -96,6 +95,7 @@ def etl_mayor():
         df['tiempo_entrega_cerrado'] = df.apply(lambda row: calcular_duracion(row['fecha_entrega'], row['hora_entrega'], row['fecha_cerrado'], row['hora_cerrado']), axis=1)
 
         df['duracion_total'] = df.apply(lambda row: calcular_duracion(row['fecha_solicitud'], row['hora_solicitud'], row['fecha_entrega'], row['hora_entrega']), axis=1)
+        
         # Renombrar columnas para cumplir con el esquema de la base de datos ETL
         df.rename(columns={
             'id': 'id_servicio',
@@ -180,7 +180,6 @@ def obtener_mayor_estado(engine, servicio_id):
         result = conn.execute(query, {"servicio_id": servicio_id}).fetchone()
     return result[0] if result else None
 
-
 def obtener_fecha_hora_estado(engine, servicio_id, estado_id):
     """Obtiene la fecha y hora para un servicio dado y un estado específico."""
     query = text("""
@@ -193,7 +192,6 @@ def obtener_fecha_hora_estado(engine, servicio_id, estado_id):
     with engine.connect() as conn:
         result = conn.execute(query, {"servicio_id": servicio_id, "estado_id": estado_id}).fetchone()
     return result if result else (None, None)
-
 
 # Función para convertir fechas de manera segura
 def safe_to_datetime(date_str):
